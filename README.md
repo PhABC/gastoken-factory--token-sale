@@ -5,8 +5,8 @@ This repository contains an implementation example using an [OpenZeppelin token 
 
 You can read more on GasToken Factories in this medium post ; 
 
-## Instructions
+## Test Instructions
 
-Run `npm install` to install node packages
+Run `npm install` to install node packages.
 
 Run `npm test` to run basic tests. 
