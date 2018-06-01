@@ -3,7 +3,10 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/token/ERC20/StandardToken.sol";
 import "./TokenSale_GasTokenFactory.sol";
 
-// mock class using StandardToken
+/**
+* @dev Allows to test the gas refund procress and verify that the optimal 
+*      GasToken to consume is correct for various transaction costs. 
+*/
 contract BenchMark {
 
   // Gas token factory
@@ -18,7 +21,11 @@ contract BenchMark {
     gasTokenFactory = _gasTokenFactory;
   }
 
-  //Function that costs 2085112 gas
+  /**
+  * @dev Executes an expensive loop and call the gasTokenFactory.freeStorage() function
+  * @param nLoops Number of loops benchmark function executes, where each loop is about ~20k gas. 
+  * @param _gasTokenToConsume Number of GasTokens to consume when calling freeStorage() function
+  */
   function benchMark(uint256 nLoops, uint256 _gasTokenToConsume) public payable {
     bytes32 hash = keccak256(abi.encodePacked(benchmarkSeed));
 
