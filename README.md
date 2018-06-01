@@ -4,3 +4,9 @@ When storage variables are deleted from the blockchain, the sender of the transa
 This repository contains an implementation example using an [OpenZeppelin token sale contract](https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/crowdsale/validation/IndividuallyCappedCrowdsale.sol) as a skeleton. 
 
 You can read more on GasToken Factories in this medium post ; 
+
+## Instructions
+
+Run `npm install` to install node packages
+
+Run `npm test` to run basic tests. 
