@@ -184,65 +184,65 @@ contract TokenSale_GasTokenFactory is Ownable {
     assembly {  sstore(storage_location_array, add(gasTokenSupply, 1))  }
   }
 
-      /**
-      * @dev Allow anyone to free some of the storage used by this contract
-      * @param _amount Amount of storage slots you want to free
-      *
-      */
-      function freeStorage(uint256 _amount) public payable {
-        
-        // Check if tokensale is finalized
-        require(finalized, 'Sale not finalized');
+  /**
+  * @dev Allow anyone to free some of the storage used by this contract
+  * @param _amount Amount of storage slots you want to free
+  *
+  */
+  function freeStorage(uint256 _amount) public payable {
+    
+    // Check if tokensale is finalized
+    require(finalized, 'Sale not finalized');
 
-        // Loading storage location array in memory to use with assembly
-        uint256 storage_location_array = STORAGE_LOCATION_ARRAY; 
+    // Loading storage location array in memory to use with assembly
+    uint256 storage_location_array = STORAGE_LOCATION_ARRAY; 
 
-        // Read gasToken gasTokenSupply
-        uint256 gasTokenSupply;
-        assembly {  gasTokenSupply := sload(storage_location_array)  }
+    // Read gasToken gasTokenSupply
+    uint256 gasTokenSupply;
+    assembly {  gasTokenSupply := sload(storage_location_array)  }
 
-        // Check if gas token gasTokenSupply is sufficient
-        require(_amount <= gasTokenSupply, 'Not enough gasTokens available');
+    // Check if gas token gasTokenSupply is sufficient
+    require(_amount <= gasTokenSupply, 'Not enough gasTokens available');
 
-        // Cost to consume _amount of gas tokens
-        uint256 cost = getFreeStorageCost(_amount);
+    // Cost to consume _amount of gas tokens
+    uint256 cost = getFreeStorageCost(_amount);
 
-        // Check if sender has enough funds to pay for the gas tokens consummed
-        require(msg.value >= cost, 'Insufficient funds to pay for the gasTokens');
+    // Check if sender has enough funds to pay for the gas tokens consummed
+    require(msg.value >= cost, 'Insufficient funds to pay for the gasTokens');
 
-        // Address to empty storage of
-        address user;
+    // Address to empty storage of
+    address user;
 
-        // Clear memory locations in interval [l, r] for gasTokens array
-        uint256 l = storage_location_array + gasTokenSupply - _amount + 1;
-        uint256 r = storage_location_array + gasTokenSupply;
+    // Clear memory locations in interval [l, r] for gasTokens array
+    uint256 l = storage_location_array + gasTokenSupply - _amount + 1;
+    uint256 r = storage_location_array + gasTokenSupply;
 
-        
-        // Empty storage
-        for (uint256 i = l; i <= r; i++) {
+    
+    // Empty storage
+    for (uint256 i = l; i <= r; i++) {
 
-            // Loading current user address
-            assembly {  user := sload(i)  }
+        // Loading current user address
+        assembly {  user := sload(i)  }
 
-            // Empty user caps and contributions
-            caps[user] = 0;
-            contributions[user] = 0;
+        // Empty user caps and contributions
+        caps[user] = 0;
+        contributions[user] = 0;
 
-            // Burn gasToken associated with user
-            assembly {  sstore(i, 0)  }
-        }
+        // Burn gasToken associated with user
+        assembly {  sstore(i, 0)  }
+    }
 
-        // Transfer funds to wallet
-        wallet.transfer(cost);
+    // Transfer funds to wallet
+    wallet.transfer(cost);
 
-        // Refund msg.sender if msg.value was too high
-        if (cost < msg.value){
-          msg.sender.transfer( (msg.value).sub(cost) );
-        }
-        
-        // Update tokenGas gasTokenSupply
-        assembly {  sstore(storage_location_array, sub(gasTokenSupply, _amount))  }
-      }
+    // Refund msg.sender if msg.value was too high
+    if (cost < msg.value){
+      msg.sender.transfer( (msg.value).sub(cost) );
+    }
+    
+    // Update tokenGas gasTokenSupply
+    assembly {  sstore(storage_location_array, sub(gasTokenSupply, _amount))  }
+  }
 
   /**
   * @dev Return the total supply of gas tokens
