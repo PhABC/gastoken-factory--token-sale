@@ -10,3 +10,7 @@ You can read more on GasToken Factories in this [medium post](https://blog.polym
 Run `npm install` to install node packages.
 
 Run `npm test` to run basic tests. 
+
+## Disclaimer
+The contracts provided here were not audited nor optimized, hence please do not reuse in production without doing your due diligence. The contracts provides no share or promise of anything and contract will probably stop working with future hard forks in the next following years.
+
